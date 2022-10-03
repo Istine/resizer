@@ -5,13 +5,24 @@ import CanvasPlaceHolder from "../UploadImageHolder/index";
 import Canvas from "./Canvas";
 
 const Index: React.FC<ICanvas> = () => {
-  const [image, setImage] = React.useState("");
+  const [image, setImage] = React.useState<string | ArrayBuffer | any>("");
 
-  const selectImage =
-    (selectedImage: string) =>
-    (e: React.MouseEvent<HTMLImageElement | HTMLButtonElement>) => {
-      setImage(selectedImage);
-    };
+  const selectImage = (
+    e: React.MouseEvent<HTMLImageElement> | React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (e.type === "click") {
+      setImage("people.jpg");
+    } else {
+      const { files } = e.target as HTMLInputElement;
+      const reader = new FileReader();
+      if (files?.length) {
+        reader.readAsDataURL(files[0]);
+        reader.onloadend = (e: Event) => {
+          setImage(reader.result);
+        };
+      }
+    }
+  };
 
   return (
     <Layout>
