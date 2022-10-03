@@ -41,7 +41,7 @@ const Index: React.FC<{
         onMouseOver={onMouseOver}
         onMouseLeave={onMouseOut}
         className={imgStyle}
-        src="people.jpg"
+        src="adobesample.png"
         alt="people"
       />
     </div>

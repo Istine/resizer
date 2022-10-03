@@ -11,7 +11,7 @@ const Index: React.FC<ICanvas> = () => {
     e: React.MouseEvent<HTMLImageElement> | React.ChangeEvent<HTMLInputElement>
   ) => {
     if (e.type === "click") {
-      setImage("people.jpg");
+      setImage("adobesample.png");
     } else {
       const { files } = e.target as HTMLInputElement;
       const reader = new FileReader();

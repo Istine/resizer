@@ -18,7 +18,7 @@ const Canvas: React.FC<{
 
       const inputImageAspectRatio = inputWidth / inputHeight;
 
-      const outputImageAspectRatio = 1;
+      const outputImageAspectRatio = 1.91 / 1;
 
       let outputWidth = img.naturalWidth;
       let outputHeight = img.naturalHeight;
