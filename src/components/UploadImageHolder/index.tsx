@@ -7,6 +7,10 @@ const Index: React.FC<{
 }> = ({ selectImage }) => {
   const [imgStyle, setImgStyle] = React.useState<string>("");
 
+  const dragRef = React.useRef<HTMLDivElement>(null);
+
+  const [dragStyle, setDragStyle] = React.useState("");
+
   const fileRef = React.useRef<HTMLInputElement>(null);
 
   const openSystemFile = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -21,9 +25,38 @@ const Index: React.FC<{
     setImgStyle("fade-out");
   };
 
+  const handleDragOver = (e: Event) => {
+    e.preventDefault();
+    setDragStyle("drag");
+  };
+
+  const handleDragLeave = (e: Event) => {
+    e.preventDefault();
+    setDragStyle("undrag");
+  };
+
+  const handleDrop = (e: Event) => {
+    e.preventDefault();
+    console.log();
+
+    setDragStyle("undrag");
+  };
+
+  React.useEffect(() => {
+    dragRef.current?.addEventListener("dragover", handleDragOver);
+    dragRef.current?.addEventListener("drop", handleDrop);
+    dragRef.current?.addEventListener("dragleave", handleDragLeave);
+
+    return () => {
+      dragRef.current?.removeEventListener("dragover", handleDragOver);
+      dragRef.current?.removeEventListener("drop", handleDrop);
+      dragRef.current?.removeEventListener("dragleave", handleDragLeave);
+    };
+  }, []);
+
   return (
     <div className="cutoutBox">
-      <div className="cutout">
+      <div ref={dragRef} className={`cutout ${dragStyle}`}>
         <span></span>
         <h3>Drag & drop an image</h3>
         <input
