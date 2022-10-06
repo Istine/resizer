@@ -4,8 +4,10 @@ import { ICanvas } from "./types";
 import CanvasPlaceHolder from "../UploadImageHolder/index";
 import Canvas from "./Canvas";
 
+export type ImageType = string | ArrayBuffer | any
+
 const Index: React.FC<ICanvas> = () => {
-  const [image, setImage] = React.useState<string | ArrayBuffer | any>("");
+  const [image, setImage] = React.useState<ImageType>("");
 
   const selectImage = (
     e: React.MouseEvent<HTMLImageElement> | React.ChangeEvent<HTMLInputElement>
@@ -24,6 +26,10 @@ const Index: React.FC<ICanvas> = () => {
     }
   };
 
+  const setDraggedImage = (image:string) => {
+    setImage(image)
+  }
+
   return (
     <Layout>
       <div className="grid">
@@ -31,7 +37,7 @@ const Index: React.FC<ICanvas> = () => {
           {image ? (
             <Canvas image={image} />
           ) : (
-            <CanvasPlaceHolder selectImage={selectImage} />
+            <CanvasPlaceHolder setDraggedImage={setDraggedImage} selectImage={selectImage} />
           )}
         </div>
         <div className="right-grid">

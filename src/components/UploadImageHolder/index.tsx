@@ -1,10 +1,12 @@
 import React from "react";
+import { ImageType } from "../Canvas";
 
 const Index: React.FC<{
   selectImage: (
     e: React.MouseEvent<HTMLImageElement> | React.ChangeEvent<HTMLInputElement>
   ) => void;
-}> = ({ selectImage }) => {
+  setDraggedImage:(image:ImageType) => void
+}> = ({ selectImage, setDraggedImage }) => {
   const [imgStyle, setImgStyle] = React.useState<string>("");
 
   const dragRef = React.useRef<HTMLDivElement>(null);
@@ -25,20 +27,27 @@ const Index: React.FC<{
     setImgStyle("fade-out");
   };
 
-  const handleDragOver = (e: Event) => {
+  const handleDragOver = (e: DragEvent) => {
     e.preventDefault();
     setDragStyle("drag");
   };
 
-  const handleDragLeave = (e: Event) => {
+  const handleDragLeave = (e: DragEvent) => {
     e.preventDefault();
     setDragStyle("undrag");
   };
 
-  const handleDrop = (e: Event) => {
+  const handleDrop = (e: DragEvent) => {
     e.preventDefault();
-    console.log();
-
+    console.log(e.dataTransfer?.files);
+    const reader = new FileReader()
+    if(e.dataTransfer?.files.length) {
+      reader.readAsDataURL(e.dataTransfer?.files[0])
+      reader.onloadend = (e) => {
+        setDraggedImage(reader.result)
+      }
+    }
+    
     setDragStyle("undrag");
   };
 
@@ -55,8 +64,8 @@ const Index: React.FC<{
   }, []);
 
   return (
-    <div className="cutoutBox">
-      <div ref={dragRef} className={`cutout ${dragStyle}`}>
+    <div ref={dragRef} className="cutoutBox">
+      <div  className={`cutout ${dragStyle}`}>
         <span></span>
         <h3>Drag & drop an image</h3>
         <input
