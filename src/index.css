@@ -103,9 +103,14 @@ canvas {
   max-width: 700px;
   max-height: 500px;
   background-color: rgb(83, 83, 83);
-  background-image: url(/public/loading.gif);
-  background-repeat: no-repeat;
-  background-size: cover;
+}
+
+.click-hold {
+  cursor:grabbing
+}
+
+.click-leave {
+  cursor: grab;
 }
 
 .right-grid {

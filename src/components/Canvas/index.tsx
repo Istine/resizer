@@ -4,10 +4,35 @@ import { ICanvas } from "./types";
 import CanvasPlaceHolder from "../UploadImageHolder/index";
 import Canvas from "./Canvas";
 
-export type ImageType = string | ArrayBuffer | any
+export type ImageType = string | ArrayBuffer | any;
 
 const Index: React.FC<ICanvas> = () => {
   const [image, setImage] = React.useState<ImageType>("");
+
+  const [hold, setHold] = React.useState(false);
+
+  const [positions, setPositions] = React.useState({
+    x: 0,
+    y: 0,
+  });
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    setHold(true);
+  };
+
+  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+    setHold(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (hold) {
+      setPositions((prevState) => ({
+        ...prevState,
+        x: e.clientX,
+        y: e.clientY,
+      }));
+    }
+  };
 
   const selectImage = (
     e: React.MouseEvent<HTMLImageElement> | React.ChangeEvent<HTMLInputElement>
@@ -26,18 +51,26 @@ const Index: React.FC<ICanvas> = () => {
     }
   };
 
-  const setDraggedImage = (image:string) => {
-    setImage(image)
-  }
+  const setDraggedImage = (image: string) => {
+    setImage(image);
+  };
 
   return (
     <Layout>
       <div className="grid">
-        <div className="canvas">
+        <div
+          className={`canvas ${hold ? "click-hold" : "click-leave"}`}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseDown={handleMouseDown}
+        >
           {image ? (
-            <Canvas image={image} />
+            <Canvas positions={positions} image={image} />
           ) : (
-            <CanvasPlaceHolder setDraggedImage={setDraggedImage} selectImage={selectImage} />
+            <CanvasPlaceHolder
+              setDraggedImage={setDraggedImage}
+              selectImage={selectImage}
+            />
           )}
         </div>
         <div className="right-grid">
