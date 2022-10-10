@@ -4,12 +4,14 @@ type SelectType = {
   open: boolean;
   items: Array<string>;
   currentItem: string;
+  currentAspectRatio: number;
   dispatch: any;
 };
 
 const initialState: SelectType = {
   open: false,
   items: [],
+  currentAspectRatio: 1,
   currentItem: "Standard",
   dispatch: () => undefined,
 };
@@ -36,15 +38,19 @@ const reducer = (state: SelectType, action: { type: any; payload?: any }) => {
     case "select":
       state.currentItem = action.payload;
       return { ...state };
+    case "change-aspect-ratio":
+      state.currentAspectRatio = action.payload;
+      return { ...state };
     default:
       return state;
   }
 };
 
 export const useSelectContext = () => {
-  const { open, items, currentItem, dispatch } = React.useContext(context);
+  const { open, items, currentItem, dispatch, currentAspectRatio } =
+    React.useContext(context);
 
-  return { open, currentItem, items, dispatch };
+  return { open, currentItem, items, dispatch, currentAspectRatio };
 };
 
 export default GlobalContext;

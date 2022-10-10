@@ -2,6 +2,8 @@ import React from "react";
 import { useSelectContext } from "../../context/SelectContext";
 import Select from "../Select";
 import { Check } from "@mui/icons-material";
+import AspectRatios from "../AspectRatios/Layout";
+import Scale from "../Scale";
 
 const SOCIALS = [
   "facebook",
@@ -68,15 +70,21 @@ const Index: React.FC<{}> = () => {
   }, [open]);
 
   return (
-    <div className="adjustments">
-      <p>Resize For:</p>
-      <Select open={open} currentItem={currentItem} openMenu={openMenu} />
+    <>
+      <div className="all-adjustments">
+        <div className="adjustments">
+          <p>Resize For:</p>
+          <Select open={open} currentItem={currentItem} openMenu={openMenu} />
+        </div>
+        <AspectRatios />
+        <Scale />
+      </div>
       {
         <ul ref={listRef} className={`list ${className}`}>
           {ListItems}
         </ul>
       }
-    </div>
+    </>
   );
 };
 

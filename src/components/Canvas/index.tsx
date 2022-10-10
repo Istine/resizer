@@ -4,7 +4,6 @@ import { ICanvas } from "./types";
 import CanvasPlaceHolder from "../UploadImageHolder/index";
 import Canvas from "./Canvas";
 import Adjustments from "../Adjustments";
-import Scale from "../Scale";
 
 export type ImageType = string | ArrayBuffer | any;
 
@@ -82,7 +81,6 @@ const Index: React.FC<ICanvas> = () => {
           </p>
           <p>Change the dimensions of any photo.</p>
           <Adjustments />
-          <Scale />
         </div>
       </div>
     </Layout>

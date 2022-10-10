@@ -1,5 +1,6 @@
 import React from "react";
 import { useScaleContext } from "../../context/ScaleContext";
+import { useSelectContext } from "../../context/SelectContext";
 
 const Canvas: React.FC<{
   image: string | ArrayBuffer | any;
@@ -8,6 +9,8 @@ const Canvas: React.FC<{
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
   const { currentPos } = useScaleContext();
+
+  const { currentAspectRatio } = useSelectContext();
 
   React.useEffect(() => {
     const canvas = canvasRef.current as HTMLCanvasElement;
@@ -43,11 +46,11 @@ const Canvas: React.FC<{
 
       const inputImageAspectRatio = inputWidth / inputHeight;
 
-      const outputImageAspectRatio = 1;
+      const outputImageAspectRatio = currentAspectRatio;
 
       let outputWidth = img.naturalWidth;
       let outputHeight = img.naturalHeight;
-
+      //2 / 3  3/ 2
       if (inputImageAspectRatio > outputImageAspectRatio) {
         outputWidth = inputHeight * outputImageAspectRatio;
       } else if (inputImageAspectRatio < outputImageAspectRatio) {
@@ -66,7 +69,7 @@ const Canvas: React.FC<{
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, outputX * scale, outputY * scale);
     };
-  }, [image, currentPos]);
+  }, [image, currentPos, currentAspectRatio]);
 
   return <canvas ref={canvasRef} />;
 };
