@@ -3,6 +3,8 @@ import Layout from "../Layout";
 import { ICanvas } from "./types";
 import CanvasPlaceHolder from "../UploadImageHolder/index";
 import Canvas from "./Canvas";
+import Adjustments from "../Adjustments";
+import Scale from "../Scale";
 
 export type ImageType = string | ArrayBuffer | any;
 
@@ -29,7 +31,7 @@ const Index: React.FC<ICanvas> = () => {
       setPositions((prevState) => ({
         ...prevState,
         x: e.clientX,
-        y: e.clientY,
+        y: e.clientX,
       }));
     }
   };
@@ -58,10 +60,10 @@ const Index: React.FC<ICanvas> = () => {
   return (
     <Layout>
       <div className="grid">
-        <div
+        <main
           className={`canvas ${hold ? "click-hold" : "click-leave"}`}
-          onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
           onMouseDown={handleMouseDown}
         >
           {image ? (
@@ -72,13 +74,15 @@ const Index: React.FC<ICanvas> = () => {
               selectImage={selectImage}
             />
           )}
-        </div>
+        </main>
         <div className="right-grid">
           <h1>Resize image</h1>
           <p>
             Powered by <span>Adobe</span>
           </p>
           <p>Change the dimensions of any photo.</p>
+          <Adjustments />
+          <Scale />
         </div>
       </div>
     </Layout>

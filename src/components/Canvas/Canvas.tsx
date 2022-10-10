@@ -1,4 +1,5 @@
 import React from "react";
+import { useScaleContext } from "../../context/ScaleContext";
 
 const Canvas: React.FC<{
   image: string | ArrayBuffer | any;
@@ -6,7 +7,7 @@ const Canvas: React.FC<{
 }> = ({ image, positions }) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
-  const [temp, setTemp] = React.useState({ x: 0, y: 0 });
+  const { currentPos } = useScaleContext();
 
   React.useEffect(() => {
     const canvas = canvasRef.current as HTMLCanvasElement;
@@ -16,8 +17,7 @@ const Canvas: React.FC<{
     img.loading = "lazy";
 
     const flagValueX = img.naturalWidth - canvas.width;
-
-    const posX = positions.x - canvas.offsetLeft - img.naturalWidth * 0.5;
+    const posX = positions.x - canvas.offsetLeft - img.naturalWidth / 2;
 
     const updateXCords =
       (posX < 0 && posX >= -flagValueX) || (posX <= 0 && posX > -1);
@@ -43,7 +43,7 @@ const Canvas: React.FC<{
 
       const inputImageAspectRatio = inputWidth / inputHeight;
 
-      const outputImageAspectRatio = 2 / 3;
+      const outputImageAspectRatio = 1;
 
       let outputWidth = img.naturalWidth;
       let outputHeight = img.naturalHeight;
@@ -54,17 +54,19 @@ const Canvas: React.FC<{
         outputHeight = inputWidth / outputImageAspectRatio;
       }
 
-      // calculate the position to draw the image at
       const outputX = (outputWidth - inputWidth) * 0.5;
       const outputY = (outputHeight - inputHeight) * 0.5;
+
+      const scale = currentPos;
 
       canvas.width = outputWidth;
       canvas.height = outputHeight;
 
+      ctx.scale(scale, scale);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, outputX, outputY);
+      ctx.drawImage(img, outputX * scale, outputY * scale);
     };
-  }, [image]);
+  }, [image, currentPos]);
 
   return <canvas ref={canvasRef} />;
 };
