@@ -36,20 +36,17 @@ const Index: React.FC<{}> = () => {
 
   const handleMove = (e: any) => {
     const bar = slideBar.current as HTMLDivElement;
+
     const offset =
-      e.target.className === "handle handle-is-active"
-        ? e.currentTarget.offsetLeft
-        : e.offsetX;
-    if (offset <= bar.clientWidth && hold) setCurrentPos(e.offsetX);
+      e.target.className === "handle handle-is-active" ? e.layerX : e.offsetX;
+    if (offset <= bar.clientWidth && hold) setCurrentPos(offset);
   };
 
   const handleMouseUp = (e: any) => {
-    const bar = slideBar.current as HTMLDivElement;
     setHold(false);
   };
 
   React.useEffect(() => {
-    const bar = slideBar.current as HTMLDivElement;
     const grid = document.querySelector(".right-grid") as HTMLDivElement;
     grid.addEventListener("mousemove", handleMove);
     document.addEventListener("mouseup", handleMouseUp);
