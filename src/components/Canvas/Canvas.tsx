@@ -1,16 +1,16 @@
 import React from "react";
 import { useScaleContext } from "../../context/ScaleContext";
-import { useSelectContext } from "../../context/SelectContext";
 
 const Canvas: React.FC<{
   image: string | ArrayBuffer | any;
   positions: { x: number; y: number };
-}> = ({ image, positions }) => {
+  hold: boolean;
+  currentAspectRatio: number;
+  handleMouseDown: (e: React.MouseEvent<HTMLCanvasElement>) => void;
+}> = ({ image, positions, hold, handleMouseDown, currentAspectRatio }) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
   const { currentPos } = useScaleContext();
-
-  const { currentAspectRatio } = useSelectContext();
 
   React.useEffect(() => {
     const canvas = canvasRef.current as HTMLCanvasElement;
@@ -36,9 +36,9 @@ const Canvas: React.FC<{
   React.useEffect(() => {
     const canvas = canvasRef.current as HTMLCanvasElement;
     const ctx: any = canvas?.getContext("2d");
-    const img = new Image();
-    img.src = image;
+    const img = document.createElement("img");
     img.loading = "lazy";
+    const outputImageAspectRatio = currentAspectRatio;
 
     img.onload = (e: Event) => {
       const inputWidth = img.naturalWidth;
@@ -46,32 +46,35 @@ const Canvas: React.FC<{
 
       const inputImageAspectRatio = inputWidth / inputHeight;
 
-      const outputImageAspectRatio = currentAspectRatio;
-
       let outputWidth = img.naturalWidth;
       let outputHeight = img.naturalHeight;
-      //2 / 3  3/ 2
       if (inputImageAspectRatio > outputImageAspectRatio) {
         outputWidth = inputHeight * outputImageAspectRatio;
       } else if (inputImageAspectRatio < outputImageAspectRatio) {
         outputHeight = inputWidth / outputImageAspectRatio;
       }
 
-      const outputX = (outputWidth - inputWidth) * 0.5;
-      const outputY = (outputHeight - inputHeight) * 0.5;
+      const scale = currentPos + 1;
 
-      const scale = currentPos;
+      const outputX = (outputWidth - inputWidth) * 0.5 * scale;
+      const outputY = (outputHeight - inputHeight) * 0.5 * scale;
 
       canvas.width = outputWidth;
       canvas.height = outputHeight;
-
       ctx.scale(scale, scale);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, outputX * scale, outputY * scale);
+      ctx.drawImage(img, outputX, outputY);
     };
-  }, [image, currentPos, currentAspectRatio]);
+    img.src = image;
+  }, [image, currentPos, currentAspectRatio.toString()]);
 
-  return <canvas ref={canvasRef} />;
+  return (
+    <canvas
+      onMouseDown={handleMouseDown}
+      ref={canvasRef}
+      style={{ cursor: hold ? "grabbing" : "grab" }}
+    />
+  );
 };
 
-export default React.memo(Canvas);
+export default Canvas;

@@ -4,11 +4,14 @@ import { ICanvas } from "./types";
 import CanvasPlaceHolder from "../UploadImageHolder/index";
 import Canvas from "./Canvas";
 import Adjustments from "../Adjustments";
+import { useSelectContext } from "../../context/SelectContext";
 
 export type ImageType = string | ArrayBuffer | any;
 
 const Index: React.FC<ICanvas> = () => {
   const [image, setImage] = React.useState<ImageType>("");
+
+  const { currentAspectRatio } = useSelectContext();
 
   const [hold, setHold] = React.useState(false);
 
@@ -17,7 +20,7 @@ const Index: React.FC<ICanvas> = () => {
     y: 0,
   });
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     setHold(true);
   };
 
@@ -60,13 +63,18 @@ const Index: React.FC<ICanvas> = () => {
     <Layout>
       <div className="grid">
         <main
-          className={`canvas ${hold ? "click-hold" : "click-leave"}`}
+          className={`canvas ${hold ? "click-hold" : ""}`}
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
-          onMouseDown={handleMouseDown}
         >
           {image ? (
-            <Canvas positions={positions} image={image} />
+            <Canvas
+              currentAspectRatio={currentAspectRatio}
+              hold={hold}
+              positions={positions}
+              image={image}
+              handleMouseDown={handleMouseDown}
+            />
           ) : (
             <CanvasPlaceHolder
               setDraggedImage={setDraggedImage}

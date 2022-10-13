@@ -37,7 +37,9 @@ const Index: React.FC<{}> = () => {
   const handleMove = (e: any) => {
     const bar = slideBar.current as HTMLDivElement;
     const offset =
-      e.target.className === "handle" ? e.currentTarget.offsetLeft : e.offsetX;
+      e.target.className === "handle handle-is-active"
+        ? e.currentTarget.offsetLeft
+        : e.offsetX;
     if (offset <= bar.clientWidth && hold) setCurrentPos(e.offsetX);
   };
 
@@ -65,7 +67,7 @@ const Index: React.FC<{}> = () => {
 
     dispatch({
       type: "update",
-      payload: currentPos / width + 1,
+      payload: currentPos / width,
     });
   }, [currentPos]);
 
@@ -79,7 +81,11 @@ const Index: React.FC<{}> = () => {
           className="bar"
           ref={slideBar}
         ></div>
-        <div onMouseDown={mouseDown} ref={handleRef} className={`handle`}></div>
+        <div
+          onMouseDown={mouseDown}
+          ref={handleRef}
+          className={`handle ${hold ? "handle-is-active" : ""}`}
+        ></div>
       </div>
     </div>
   );

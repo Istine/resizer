@@ -5,7 +5,7 @@ const Index: React.FC<{
   selectImage: (
     e: React.MouseEvent<HTMLImageElement> | React.ChangeEvent<HTMLInputElement>
   ) => void;
-  setDraggedImage:(image:ImageType) => void
+  setDraggedImage: (image: ImageType) => void;
 }> = ({ selectImage, setDraggedImage }) => {
   const [imgStyle, setImgStyle] = React.useState<string>("");
 
@@ -39,15 +39,14 @@ const Index: React.FC<{
 
   const handleDrop = (e: DragEvent) => {
     e.preventDefault();
-    console.log(e.dataTransfer?.files);
-    const reader = new FileReader()
-    if(e.dataTransfer?.files.length) {
-      reader.readAsDataURL(e.dataTransfer?.files[0])
+    const reader = new FileReader();
+    if (e.dataTransfer?.files.length) {
+      reader.readAsDataURL(e.dataTransfer?.files[0]);
       reader.onloadend = (e) => {
-        setDraggedImage(reader.result)
-      }
+        setDraggedImage(reader.result);
+      };
     }
-    
+
     setDragStyle("undrag");
   };
 
@@ -65,7 +64,7 @@ const Index: React.FC<{
 
   return (
     <div ref={dragRef} className="cutoutBox">
-      <div  className={`cutout ${dragStyle}`}>
+      <div className={`cutout ${dragStyle}`}>
         <span></span>
         <h3>Drag & drop an image</h3>
         <input
