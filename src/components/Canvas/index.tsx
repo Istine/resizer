@@ -15,28 +15,25 @@ const Index: React.FC<ICanvas> = () => {
 
   const [hold, setHold] = React.useState(false);
 
-  const [down, setDown] = React.useState(0);
-
   const [positions, setPositions] = React.useState({
     x: 0,
     y: 0,
   });
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    setHold(true);
-    setDown(e.nativeEvent.offsetX);
+  const handleMouseDown = (e: any) => {
+    if (e.target?.id === "main-canvas") setHold(true);
   };
 
-  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseUp = (e: Event) => {
     setHold(false);
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: any) => {
     if (hold) {
       setPositions((prevState) => ({
         ...prevState,
-        x: e.clientX,
-        y: e.clientY,
+        x: e.offsetX,
+        y: e.offsetY,
       }));
     }
   };
@@ -62,22 +59,35 @@ const Index: React.FC<ICanvas> = () => {
     setImage(image);
   };
 
+  React.useEffect(() => {
+    const grid = document.getElementById("left-grid") as HTMLDivElement;
+    grid.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("mousedown", handleMouseDown);
+
+    return () => {
+      grid.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mousedown", handleMouseDown);
+    };
+  }, [hold]);
+
   return (
     <Layout>
       <div className="grid">
-        <main
+        <div
+          id="left-grid"
           className={`canvas ${hold ? "click-hold" : ""}`}
-          onMouseUp={handleMouseUp}
-          onMouseMove={handleMouseMove}
+          // onMouseUp={handleMouseUp}
+          // onMouseMove={handleMouseMove}
         >
           {image ? (
             <Canvas
-              down={down}
               currentAspectRatio={currentAspectRatio}
               hold={hold}
               positions={positions}
               image={image}
-              handleMouseDown={handleMouseDown}
+              // handleMouseDown={handleMouseDown}
             />
           ) : (
             <CanvasPlaceHolder
@@ -85,7 +95,7 @@ const Index: React.FC<ICanvas> = () => {
               selectImage={selectImage}
             />
           )}
-        </main>
+        </div>
         <div className="right-grid">
           <h1>Resize image</h1>
           <p>

@@ -52,6 +52,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  pointer-events: all;
+
 }
 
 .cutoutBox {
@@ -105,10 +107,24 @@ body {
   width: 100px;
   height: 70px;
   border-radius: 10px;
+  -webkit-user-drag: none;
 }
 
 .cutoutBox img:hover {
   cursor: pointer;
+}
+
+.canvas-cover {
+  width: auto;
+  height: auto;
+  padding: 0 2rem;
+  background-color: #f5f5f5;
+  border-radius: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: all;
+
 }
 
 canvas {
@@ -118,6 +134,7 @@ canvas {
   max-height: 500px;
   background-color: rgb(83, 83, 83);
   cursor: grab;
+  pointer-events: all;
 }
 
 
