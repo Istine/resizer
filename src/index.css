@@ -13,7 +13,11 @@
   -webkit-text-size-adjust: 100%;
 }
 
-p, span , h1, img, div {
+p,
+span,
+h1,
+img,
+div {
   -moz-user-select: none;
   -khtml-user-select: none;
   -webkit-user-select: none;
@@ -41,9 +45,8 @@ body {
 .grid {
   width: 100%;
   display: grid;
-  grid-template-columns: 70% 30%;
+  grid-template-columns: 70% 330px;
   overflow: hidden;
-
 }
 
 .canvas {
@@ -53,7 +56,6 @@ body {
   justify-content: center;
   align-items: center;
   pointer-events: all;
-
 }
 
 .cutoutBox {
@@ -124,7 +126,6 @@ body {
   justify-content: center;
   align-items: center;
   pointer-events: all;
-
 }
 
 canvas {
@@ -137,17 +138,15 @@ canvas {
   pointer-events: all;
 }
 
-
 .click-hold {
-  cursor:grabbing ;
+  cursor: grabbing;
 }
-
 
 .right-grid {
   width: 100%;
-  padding: 1rem ;
+  padding: 1rem;
   font-weight: bolder;
-  margin: 0;
+  margin: 0 auto;
 }
 
 .right-grid p {
@@ -178,11 +177,11 @@ canvas {
 
 .all-adjustments {
   width: 100%;
-  height: 280px;
+  max-height: 280px;
   overflow: auto;
   position: relative;
-  width: 90%;
-  z-index: unset;
+  display: flex;
+  flex-direction: column;
 }
 
 .adjustments {
@@ -192,21 +191,30 @@ canvas {
   align-items: center;
 }
 
- .list {
+.adjustments span {
+  font-size: 12px;
+  width: 100px;
+  height: auto;
+  font-weight: normal;
+}
+
+.list {
   width: 200px;
   min-height: 200px;
   padding: 0;
   opacity: 0;
+  display: none;
   list-style: none;
   overflow-y: auto;
   background-color: #fefefe;
   position: absolute;
   z-index: 999999999;
   right: 0;
-  bottom: 3.3rem;
+  bottom: 4rem;
   overflow: hidden;
-  transform: translateX(-50%);
-  box-shadow: rgba(79, 79, 79, 0.16) 0px 3px 6px, rgba(75, 75, 75, 0.23) 0px 3px 6px;
+  transform: translateX(-40%);
+  box-shadow: rgba(79, 79, 79, 0.16) 0px 3px 6px,
+    rgba(75, 75, 75, 0.23) 0px 3px 6px;
   border-radius: 5px;
 }
 
@@ -214,7 +222,7 @@ canvas {
   font-weight: normal;
   font-size: 13px;
   text-transform: capitalize;
-  padding: .2rem .5rem;
+  padding: 0.2rem 0.5rem;
   overflow: hidden;
   cursor: pointer;
   display: flex;
@@ -227,13 +235,12 @@ canvas {
 }
 
 .select {
-  width: 180px;
-  padding: .1rem .5rem;
+  width: 160px;
+  padding: 0.1rem 0.5rem;
   font-size: 13px;
   font-weight: normal;
   border: 1px solid #ccc;
   text-align: left;
-  margin: 0 1rem;
   border-radius: 5px;
   cursor: pointer;
   text-transform: capitalize;
@@ -243,11 +250,13 @@ canvas {
 }
 
 .select-open {
-  animation: select-fadein 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation: select-fadein 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275)
+    forwards;
 }
 
 .select-close {
-  animation: select-fadeout 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation: select-fadeout 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275)
+    forwards;
 }
 
 .active-select-menu {
@@ -272,7 +281,6 @@ canvas {
   width: 65%;
   position: relative;
   margin: 1rem 0;
-
 }
 
 .scale .slide-bar-container .bar {
@@ -301,12 +309,6 @@ canvas {
   border: 7px solid black;
 }
 
-
-
-/* .scale .slide-bar-container .handle-is-active {
-  border: 3px solid black;
-} */
-
 .handle-squeeze {
   animation: squeeze 300ms ease forwards;
 }
@@ -329,22 +331,22 @@ canvas {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: .3rem;
+  padding: 0.3rem;
   border-radius: 7px;
 }
 
-.aspect-ratio-container  .aspect-ratio-box {
+.aspect-ratio-container .aspect-ratio-box {
   width: auto;
   height: auto;
-  padding: .3rem;
+  padding: 0.3rem;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #eee;
   border-radius: 7px;
-} 
+}
 
-.aspect-ratio-container  .aspect-ratio-box:hover {
+.aspect-ratio-container .aspect-ratio-box:hover {
   border: 2px solid #aaa;
 }
 
@@ -354,10 +356,10 @@ canvas {
 }
 
 @keyframes squeeze {
-  to{
+  to {
     border: 0px solid #000;
   }
-  from{
+  from {
     border: 5px solid #000;
   }
 }
@@ -418,9 +420,9 @@ canvas {
   }
 }
 
-
 @keyframes select-fadeout {
   0% {
+    display: block;
     opacity: 1;
   }
   25% {
@@ -450,11 +452,9 @@ canvas {
   }
   75% {
     opacity: 1;
-
   }
   100% {
     display: block;
     opacity: 1;
   }
 }
-

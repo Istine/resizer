@@ -75,19 +75,13 @@ const Index: React.FC<ICanvas> = () => {
   return (
     <Layout>
       <div className="grid">
-        <div
-          id="left-grid"
-          className={`canvas ${hold ? "click-hold" : ""}`}
-          // onMouseUp={handleMouseUp}
-          // onMouseMove={handleMouseMove}
-        >
+        <div id="left-grid" className={`canvas ${hold ? "click-hold" : ""}`}>
           {image ? (
             <Canvas
               currentAspectRatio={currentAspectRatio}
               hold={hold}
               positions={positions}
               image={image}
-              // handleMouseDown={handleMouseDown}
             />
           ) : (
             <CanvasPlaceHolder

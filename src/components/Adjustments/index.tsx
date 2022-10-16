@@ -73,7 +73,7 @@ const Index: React.FC<{}> = () => {
     <>
       <div className="all-adjustments">
         <div className="adjustments">
-          <p>Resize For:</p>
+          <span>Resize For:</span>
           <Select open={open} currentItem={currentItem} openMenu={openMenu} />
         </div>
         <AspectRatios />
