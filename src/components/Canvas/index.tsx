@@ -15,6 +15,8 @@ const Index: React.FC<ICanvas> = () => {
 
   const [hold, setHold] = React.useState(false);
 
+  const [down, setDown] = React.useState(0);
+
   const [positions, setPositions] = React.useState({
     x: 0,
     y: 0,
@@ -22,6 +24,7 @@ const Index: React.FC<ICanvas> = () => {
 
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     setHold(true);
+    setDown(e.nativeEvent.offsetX);
   };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -33,7 +36,7 @@ const Index: React.FC<ICanvas> = () => {
       setPositions((prevState) => ({
         ...prevState,
         x: e.clientX,
-        y: e.clientX,
+        y: e.clientY,
       }));
     }
   };
@@ -69,6 +72,7 @@ const Index: React.FC<ICanvas> = () => {
         >
           {image ? (
             <Canvas
+              down={down}
               currentAspectRatio={currentAspectRatio}
               hold={hold}
               positions={positions}

@@ -7,35 +7,76 @@ const Canvas: React.FC<{
   hold: boolean;
   currentAspectRatio: number;
   handleMouseDown: (e: React.MouseEvent<HTMLCanvasElement>) => void;
+  down: number;
 }> = ({ image, positions, hold, handleMouseDown, currentAspectRatio }) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
   const { currentPos } = useScaleContext();
 
+  const [prevPoint, setPrevPoint] = React.useState({ x: 0, y: 0 });
+
+  const [diff, setDiff] = React.useState({ x: 0, y: 0 });
+
   React.useEffect(() => {
     const canvas = canvasRef.current as HTMLCanvasElement;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: false }) as any;
     const img = new Image();
     img.src = image;
     img.loading = "lazy";
 
-    const flagValueX = img.naturalWidth - canvas.width;
-    const posX = positions.x - canvas.offsetLeft - img.naturalWidth / 2;
+    const flagX = img.naturalWidth - canvas.width;
+    const flagH = img.naturalHeight - canvas.height;
+    const posX =
+      positions.x === 0
+        ? prevPoint.x
+        : positions.x - canvas.offsetLeft - flagX / 2;
+
+    const posY =
+      positions.y === 0
+        ? prevPoint.y
+        : positions.y - canvas.offsetTop - flagH / 2;
+
+    const differenceX = posX - prevPoint.x;
+    const differenceY = posY - prevPoint.y;
+    const diffStatusX = Math.abs(differenceX - diff.x) > 20;
+    const diffStatusY = Math.abs(differenceY - diff.y) > 20;
+
+    if (diffStatusX)
+      setDiff((prevDifference) => ({ ...prevDifference, x: differenceX }));
+    if (diffStatusY)
+      setDiff((prevDifference) => ({ ...prevDifference, y: differenceY }));
+
+    const diffValueX = diffStatusX ? differenceX : diff.x;
+    const diffValueY = diffStatusY ? differenceY : diff.y;
+
+    const cordX = Math.floor(posX - diffValueX);
+    const cordY = Math.floor(posY - diffValueY);
 
     const updateXCords =
-      (posX < 0 && posX >= -flagValueX) || (posX <= 0 && posX > -1);
+      (cordX < 0 && cordX >= -flagX) || (cordX <= 0 && cordX > -1);
+
+    const updateYCords =
+      (cordY < 0 && cordY >= -flagH) || (cordY <= 0 && cordY > -1);
 
     if (updateXCords) {
       img.onload = (e: Event) => {
-        ctx?.clearRect(0, 0, canvas.width, canvas.height);
-        ctx?.drawImage(img, posX, 0);
+        ctx.clearRect(prevPoint.x, prevPoint.y, canvas.width, canvas.height);
+        ctx?.drawImage(img, cordX, prevPoint.y);
+        setPrevPoint((prevPoints) => ({ ...prevPoints, x: cordX }));
+      };
+    }
+    if (updateYCords) {
+      setPrevPoint((prevPoints) => ({ ...prevPoints, y: cordY }));
+      img.onload = (e: Event) => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx?.drawImage(img, prevPoint.x, cordY);
       };
     }
   }, [positions.y, positions.x]);
 
   React.useEffect(() => {
     const canvas = canvasRef.current as HTMLCanvasElement;
-    const ctx: any = canvas?.getContext("2d");
+    const ctx: any = canvas?.getContext("2d", { alpha: false });
     const img = document.createElement("img");
     img.loading = "lazy";
     const outputImageAspectRatio = currentAspectRatio;
@@ -58,6 +99,7 @@ const Canvas: React.FC<{
 
       const outputX = (outputWidth - inputWidth) * 0.5 * scale;
       const outputY = (outputHeight - inputHeight) * 0.5 * scale;
+      setPrevPoint((prevState) => ({ ...prevState, x: outputX, y: outputY }));
 
       canvas.width = outputWidth;
       canvas.height = outputHeight;
