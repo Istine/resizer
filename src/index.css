@@ -105,6 +105,10 @@ body {
   display: none;
 }
 
+.right-grid .file-upload {
+  display: none;
+}
+
 .cutoutBox img {
   width: 100px;
   height: 70px;
@@ -117,7 +121,7 @@ body {
 }
 
 .canvas-cover {
-  width: auto;
+  width: 80%;
   height: auto;
   padding: 0 2rem;
   background-color: #f5f5f5;
@@ -125,7 +129,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  pointer-events: all;
+  pointer-events: visible;
 }
 
 canvas {
@@ -156,6 +160,17 @@ canvas {
 
 .right-grid span {
   font-weight: bolder;
+}
+
+.right-grid button {
+  padding: 0.7rem 2.5rem;
+  outline: none;
+  border: none;
+  background-color: rgb(77, 94, 222);
+  font-size: medium;
+  color: white;
+  border-radius: 25px;
+  cursor: pointer;
 }
 
 .drag {

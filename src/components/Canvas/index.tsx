@@ -5,11 +5,16 @@ import CanvasPlaceHolder from "../UploadImageHolder/index";
 import Canvas from "./Canvas";
 import Adjustments from "../Adjustments";
 import { useSelectContext } from "../../context/SelectContext";
+import { v4 } from "uuid";
+
+export const SAMPLE_IMAGE = "adobesample.png";
 
 export type ImageType = string | ArrayBuffer | any;
 
 const Index: React.FC<ICanvas> = () => {
   const [image, setImage] = React.useState<ImageType>("");
+
+  const fileReference = React.useRef<HTMLInputElement>(null);
 
   const { currentAspectRatio } = useSelectContext();
 
@@ -42,7 +47,7 @@ const Index: React.FC<ICanvas> = () => {
     e: React.MouseEvent<HTMLImageElement> | React.ChangeEvent<HTMLInputElement>
   ) => {
     if (e.type === "click") {
-      setImage("adobesample.png");
+      setImage(SAMPLE_IMAGE);
     } else {
       const { files } = e.target as HTMLInputElement;
       const reader = new FileReader();
@@ -57,6 +62,30 @@ const Index: React.FC<ICanvas> = () => {
 
   const setDraggedImage = (image: string) => {
     setImage(image);
+  };
+
+  const downloadImage = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const canvas = document.querySelector("canvas") as HTMLCanvasElement;
+    const src = canvas.toDataURL();
+    const link = document.createElement("a") as HTMLAnchorElement;
+    link.href = src;
+    link.download = v4() + ".png";
+    link.click();
+  };
+
+  const uploadImage = (e: React.MouseEvent<HTMLButtonElement>) => {
+    fileReference?.current?.click();
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target as HTMLInputElement;
+    const reader = new FileReader();
+    if (files?.length) {
+      reader.readAsDataURL(files[0]);
+      reader.onloadend = (e: Event) => {
+        setImage(reader.result);
+      };
+    }
   };
 
   React.useEffect(() => {
@@ -97,6 +126,24 @@ const Index: React.FC<ICanvas> = () => {
           </p>
           <p>Change the dimensions of any photo.</p>
           <Adjustments />
+          {image === SAMPLE_IMAGE ? (
+            <>
+              <input
+                ref={fileReference}
+                type="file"
+                id="file-upload"
+                className="file-upload"
+                onChange={handleImageUpload}
+              />
+              <button onClick={uploadImage} className="download">
+                Upload Image
+              </button>
+            </>
+          ) : (
+            <button className="download" onClick={downloadImage}>
+              Download
+            </button>
+          )}
         </div>
       </div>
     </Layout>
