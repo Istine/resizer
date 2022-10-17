@@ -140,9 +140,11 @@ const Index: React.FC<ICanvas> = () => {
               </button>
             </>
           ) : (
-            <button className="download" onClick={downloadImage}>
-              Download
-            </button>
+            image && (
+              <button className="download" onClick={downloadImage}>
+                Download
+              </button>
+            )
           )}
         </div>
       </div>

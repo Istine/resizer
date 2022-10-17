@@ -6,7 +6,6 @@ const Canvas: React.FC<{
   positions: { x: number; y: number };
   hold: boolean;
   currentAspectRatio: number;
-  // handleMouseDown: (e: React.MouseEvent<HTMLCanvasElement>) => void;
 }> = ({ image, positions, hold, currentAspectRatio }) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
@@ -20,6 +19,7 @@ const Canvas: React.FC<{
     const canvas = canvasRef.current as HTMLCanvasElement;
     const ctx = canvas.getContext("2d") as any;
     const img = new Image();
+
     img.src = image;
     img.loading = "lazy";
 
@@ -86,8 +86,8 @@ const Canvas: React.FC<{
 
       const inputImageAspectRatio = inputWidth / inputHeight;
 
-      let outputWidth = img.naturalWidth;
-      let outputHeight = img.naturalHeight;
+      let outputWidth = inputWidth;
+      let outputHeight = inputHeight;
       if (inputImageAspectRatio > outputImageAspectRatio) {
         outputWidth = inputHeight * outputImageAspectRatio;
       } else if (inputImageAspectRatio < outputImageAspectRatio) {
@@ -102,6 +102,7 @@ const Canvas: React.FC<{
 
       canvas.width = outputWidth;
       canvas.height = outputHeight;
+
       ctx.scale(scale, scale);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, outputX, outputY);
