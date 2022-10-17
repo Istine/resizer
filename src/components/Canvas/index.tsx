@@ -66,11 +66,33 @@ const Index: React.FC<ICanvas> = () => {
 
   const downloadImage = (e: React.MouseEvent<HTMLButtonElement>) => {
     const canvas = document.querySelector("canvas") as HTMLCanvasElement;
-    const src = canvas.toDataURL();
-    const link = document.createElement("a") as HTMLAnchorElement;
-    link.href = src;
-    link.download = v4() + ".png";
-    link.click();
+    const targetCanvas = document.createElement("canvas") as HTMLCanvasElement;
+    let w = 692;
+    let h = 620;
+    const ratio = w / h;
+
+    if (ratio > currentAspectRatio) {
+      w = h * currentAspectRatio;
+    } else if (ratio < currentAspectRatio) {
+      h = w / currentAspectRatio;
+    }
+
+    targetCanvas.width = w;
+    targetCanvas.height = h;
+    targetCanvas.getContext("2d")?.drawImage(canvas, 0, 0, w, h);
+    targetCanvas.toBlob(
+      (blob) => {
+        const url = URL.createObjectURL(blob as Blob);
+        const link = document.createElement("a") as HTMLAnchorElement;
+        link.href = url;
+        link.download = v4() + ".jpg";
+        link.click();
+
+        URL.revokeObjectURL(link.href);
+      },
+      "image/jpeg",
+      0.9
+    );
   };
 
   const uploadImage = (e: React.MouseEvent<HTMLButtonElement>) => {

@@ -1,6 +1,9 @@
 import React from "react";
 import { useScaleContext } from "../../context/ScaleContext";
 
+const MAX_WIDTH = 1080;
+const MAX_HEIGHT = 1920;
+
 const Canvas: React.FC<{
   image: string | ArrayBuffer | any;
   positions: { x: number; y: number };
@@ -88,6 +91,7 @@ const Canvas: React.FC<{
 
       let outputWidth = inputWidth;
       let outputHeight = inputHeight;
+
       if (inputImageAspectRatio > outputImageAspectRatio) {
         outputWidth = inputHeight * outputImageAspectRatio;
       } else if (inputImageAspectRatio < outputImageAspectRatio) {
