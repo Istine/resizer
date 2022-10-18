@@ -43,25 +43,75 @@ const Index: React.FC<ICanvas> = () => {
     }
   };
 
-  const selectImage = (
+  const selectImage = async (
     e: React.MouseEvent<HTMLImageElement> | React.ChangeEvent<HTMLInputElement>
   ) => {
     if (e.type === "click") {
-      setImage(SAMPLE_IMAGE);
+      const img = await changeImageDimensions(SAMPLE_IMAGE);
+      setImage(img);
     } else {
       const { files } = e.target as HTMLInputElement;
       const reader = new FileReader();
       if (files?.length) {
         reader.readAsDataURL(files[0]);
-        reader.onloadend = (e: Event) => {
-          setImage(reader.result);
+        reader.onloadend = async (e: Event) => {
+          const img = await changeImageDimensions(reader.result as string);
+          setImage(img);
         };
       }
     }
   };
 
-  const setDraggedImage = (image: string) => {
-    setImage(image);
+  const setDraggedImage = async (image: string) => {
+    const img = await changeImageDimensions(image);
+    setImage(img);
+  };
+
+  const changeImageDimensions = (image: string) => {
+    return new Promise((resolve) => {
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      const img = new Image();
+
+      const MAX_WIDTH = 1080;
+      const MAX_HEIGHT = 1080;
+
+      img.onload = (e: Event) => {
+        const inputWidth = img.naturalWidth;
+        const inputHeight = img.naturalHeight;
+
+        let outputWidth = inputWidth;
+        let outputHeight = inputHeight;
+
+        if (outputWidth > outputHeight) {
+          if (outputWidth > MAX_WIDTH) {
+            outputHeight = Math.round((outputHeight * MAX_WIDTH) / outputWidth);
+            outputWidth = MAX_WIDTH;
+          }
+        } else {
+          if (outputHeight > MAX_HEIGHT) {
+            outputWidth = Math.round((outputWidth * MAX_HEIGHT) / outputHeight);
+            outputHeight = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = outputWidth;
+        canvas.height = outputHeight;
+
+        context?.drawImage(img, 0, 0, outputWidth, outputHeight);
+        canvas.toBlob(
+          (blob) => {
+            const blobUrl = URL.createObjectURL(blob as Blob);
+            resolve(blobUrl);
+            // URL.revokeObjectURL(blobUrl);
+          },
+          "image/jpeg",
+          0.9
+        );
+      };
+
+      img.src = image;
+    });
   };
 
   const downloadImage = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -104,8 +154,9 @@ const Index: React.FC<ICanvas> = () => {
     const reader = new FileReader();
     if (files?.length) {
       reader.readAsDataURL(files[0]);
-      reader.onloadend = (e: Event) => {
-        setImage(reader.result);
+      reader.onloadend = async (e: Event) => {
+        const img = await changeImageDimensions(reader.result as string);
+        setImage(img);
       };
     }
   };
