@@ -6,6 +6,7 @@ import Canvas from "./Canvas";
 import Adjustments from "../Adjustments";
 import { useSelectContext } from "../../context/SelectContext";
 import { v4 } from "uuid";
+import { MAX_HEIGHT, MAX_WIDTH } from "../../constants";
 
 export const SAMPLE_IMAGE = "adobesample.png";
 
@@ -16,7 +17,7 @@ const Index: React.FC<ICanvas> = () => {
 
   const fileReference = React.useRef<HTMLInputElement>(null);
 
-  const { currentAspectRatio } = useSelectContext();
+  const { currentAspectRatio, dispatch } = useSelectContext();
 
   const [hold, setHold] = React.useState(false);
 
@@ -73,9 +74,6 @@ const Index: React.FC<ICanvas> = () => {
       const context = canvas.getContext("2d");
       const img = new Image();
 
-      const MAX_WIDTH = 1080;
-      const MAX_HEIGHT = 1080;
-
       img.onload = (e: Event) => {
         const inputWidth = img.naturalWidth;
         const inputHeight = img.naturalHeight;
@@ -98,12 +96,16 @@ const Index: React.FC<ICanvas> = () => {
         canvas.width = outputWidth;
         canvas.height = outputHeight;
 
+        dispatch({
+          type: "change-aspect-ratio",
+          payload: outputWidth / outputHeight,
+        });
+
         context?.drawImage(img, 0, 0, outputWidth, outputHeight);
         canvas.toBlob(
           (blob) => {
             const blobUrl = URL.createObjectURL(blob as Blob);
             resolve(blobUrl);
-            // URL.revokeObjectURL(blobUrl);
           },
           "image/jpeg",
           0.9
@@ -117,8 +119,8 @@ const Index: React.FC<ICanvas> = () => {
   const downloadImage = (e: React.MouseEvent<HTMLButtonElement>) => {
     const canvas = document.querySelector("canvas") as HTMLCanvasElement;
     const targetCanvas = document.createElement("canvas") as HTMLCanvasElement;
-    let w = 692;
-    let h = 620;
+    let w = MAX_WIDTH;
+    let h = MAX_HEIGHT;
     const ratio = w / h;
 
     if (ratio > currentAspectRatio) {

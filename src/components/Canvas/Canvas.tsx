@@ -1,9 +1,6 @@
 import React from "react";
 import { useScaleContext } from "../../context/ScaleContext";
 
-const MAX_WIDTH = 1080;
-const MAX_HEIGHT = 1920;
-
 const Canvas: React.FC<{
   image: string | ArrayBuffer | any;
   positions: { x: number; y: number };

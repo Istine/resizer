@@ -33,3 +33,6 @@ export const MAPS: { [x: string]: { [x: string]: Array<number> } } = {
     "2:3": [2, 3],
   },
 };
+
+export const MAX_WIDTH = 1080;
+export const MAX_HEIGHT = 1080;
