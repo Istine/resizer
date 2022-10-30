@@ -30,10 +30,7 @@ const Canvas: React.FC<{
         : positions.x - canvas.offsetLeft - flagX / 2;
 
     const differenceX = posX - prevPoint.x;
-    const diffStatusX = Math.abs(differenceX - diff.x) > 50;
-
-    if (diffStatusX)
-      setDiff((prevDifference) => ({ ...prevDifference, x: differenceX }));
+    const diffStatusX = Math.abs(differenceX - diff.x) > 20; // was previously 50
 
     const diffValueX = diffStatusX ? differenceX : diff.x;
 
@@ -49,6 +46,8 @@ const Canvas: React.FC<{
         setPrevPoint((prevPoints) => ({ ...prevPoints, x: cordX }));
       };
     }
+    if (diffStatusX)
+      setDiff((prevDifference) => ({ ...prevDifference, x: differenceX }));
   }, [positions.x]);
 
   React.useEffect(() => {
